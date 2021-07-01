@@ -1,0 +1,101 @@
+﻿@using MVCCOdeFirst.Models
+@model  MVCCOdeFirst.Models.DepartmentCourses
+
+@{
+    Layout = null;
+}
+
+@{
+    var depts = Model.Departments;
+    var courses = Model.Courses;
+    var db = new ITIModel();
+
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+
+
+    <table class="table">
+
+        @foreach (var dept in depts)
+        {
+
+
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => dept.DeptName)
+                </td>
+                <td>
+                    @Html.ActionLink("AddCrsToDept", "AddCrsToDept", new { id = dept.DeptID }) |
+                    @Html.ActionLink("RemoveCrsToDept", "RemoveCrsToDept", new { id = dept.DeptID }) |
+                    @Html.ActionLink("Edit", "Edit", new { id = dept.DeptID }) |
+                    @Html.ActionLink("Details", "Details", new { id = dept.DeptID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = dept.DeptID })
+
+                </td>
+                <td>
+                    @{
+
+                        var deptCourses = db.DeptCourses.Where(a => a.DeptID == dept.DeptID).Select(a => a.Course);
+
+
+                    }
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CourseId, "Courses", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("CourseId", new SelectList(deptCourses, "Cr_ID", "Cr_name"), htmlAttributes: new { @class = "form -control", @id = "dropDown_Courses" })
+                            @Html.ValidationMessageFor(model => model.CourseId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+        }
+
+    </table>
+
+
+</html>
+</body>
+
+<script src="~/Scripts/jquery-1.8.0.min.js"></script>
+<script>
+
+
+
+    $("#dropDown_Courses").change(function () {
+        var serviceURL = '/Courses/GetStudentByCourseId/3';
+
+        $.ajax({
+            type: "get",
+            url: serviceURL,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: successFunc,
+            error: errorFunc
+        });
+
+        function successFunc(data, status) {
+            alert(data);
+        }
+
+        function errorFunc(data) {
+            alert(data.data);
+            alert(data.message);
+        }
+    });
+
+
+
+
+</script>

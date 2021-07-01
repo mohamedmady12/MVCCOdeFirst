@@ -1,0 +1,27 @@
+﻿
+@using MVCCOdeFirst.Models
+@model List<Course>
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>RemoveCourse</title>
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        foreach (var item in Model)
+        {
+            <input type="checkbox" name="course" value="@item.Cr_ID" />@item.Cr_name<br />
+        }
+        <input type="submit" value="Remove" />
+
+    }
+</body>
+</html>
